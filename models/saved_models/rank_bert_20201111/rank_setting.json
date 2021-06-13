@@ -1,0 +1,7 @@
+{
+  "models_path": "/Data/xiaobensuan/Codes/chatbot_retrieval/models/saved_models/rank_bert_20201111",
+  "pretrain_model_path": "/data/pretrain/tensorflow2.x/chinese-roberta-wwm-ext-large",
+  "max_seq_len": 64,
+  "batch_size": 32,
+  "epochs": 5
+}
