@@ -34,7 +34,8 @@ from models.rank.rank import rank_instance
 logger = logging.getLogger(__name__)
 
 app = Sanic(__name__)
-app.config.from_object(CONFIG)
+
+app.update_config(CONFIG)
 
 
 @app.route("/")
@@ -52,11 +53,15 @@ async def faq_predict(request: Request) -> HTTPResponse:
     try:
         sender = request.json["sender"]
         querys = request.json["message"]
-        fields = request.json["fields"]
-        score = request.json["score"]
+        if "fields" in request.json:
+            fields = request.json["fields"]
+        if "score" in request.json:
+            score = request.json["score"]
         result = qa_normal(querys)
         res_dic = {
-            "result": result[0],
+            "status": "success",
+            "code": 200,
+            "result": result,
             "time": localtime
         }
         log_res = json.dumps(res_dic, ensure_ascii=False)
@@ -66,8 +71,9 @@ async def faq_predict(request: Request) -> HTTPResponse:
     except Exception as e:
         logger.info('Error is {}'.format(e))
         res_dic = {
-            "result": 'Failure',
-            "msg": str(e),
+            "status": 'Failure',
+            "code": 400,
+            "result": str(e),
             "time": localtime
         }
 

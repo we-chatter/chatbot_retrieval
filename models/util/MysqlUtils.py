@@ -20,7 +20,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class FAQData():
+class FAQData:
 
     def __init__(self):
 

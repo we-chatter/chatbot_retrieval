@@ -25,9 +25,9 @@ def qa_normal(message):
     """
     问答标准化
     """
+
     response = es.search_es(message)
     responses_sorted = sorted(response, key=lambda x: x['score'], reverse=True)    # 倒排索引粗排序后召回结果
     result = rank_instance.do_rank(message, responses_sorted)
-    # answer = responses_sorted[0]['answers']
 
     return result

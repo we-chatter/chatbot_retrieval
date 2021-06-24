@@ -1,16 +1,23 @@
+# -*- coding: utf-8 -*-
+
 """
-@author: 吴欣辉
-@code: rank.py
-@date: 2020-11-12
-@desc: 排序接口
+@Author  :   Xu
+
+@Software:   PyCharm
+
+@File    :   LogUtils2.py
+
+@Time    :   2018-06-13 17:51
+
+@Desc    :
+
 """
+
 import logging
 import string
 
 from models.rank.model.rankONNX import RankONNX
-# from models.common.time_toolkit import time_costing
 
-__all__ = ["rank_instance"]
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +25,6 @@ logger = logging.getLogger(__name__)
 class RankV1(object):
     """docstring for rankAPi"""
 
-    # @time_costing
     def __init__(self):
         logging.info("===========================排序接口开始加载===========================")
         # models_path = "rank/saved_models/rank_bert_20201111"
@@ -29,7 +35,6 @@ class RankV1(object):
         self.rankONNX = RankONNX()
         logging.info("===========================排序接口加载完成===========================")
 
-    # @time_costing
     def do_match(self, json_data):
         logging.info(f"执行rank排序...")
         # l_recall_results = json_data["results"]
@@ -59,17 +64,28 @@ class RankV1(object):
         """
         logging.info(f"执行rank排序...")
         querys = list(zip([query] * len(esres), [j["sim_question"].strip(string.punctuation) for j in esres]))
-        rank_scores = self.rankONNX.predict(querys)
-        for j in range(len(esres)):
-            esres[j]["score"] = float(rank_scores[j]) * 0.3 + float(esres[j]["score"])
-        max_scores = max([j["score"] for j in esres])
-        recalls = [j for j in esres if j["score"] >= max_scores - 0.25]
-        recalls = [j for j in recalls if j["score"] >= 0.15]
-        logger.info(f"rank结果集: {recalls}")
-        # 这里要再排序一次
-        # if recalls:
-        #     recalls = sorted(recalls, key=lambda r: r["score"], reverse=True)
-        return recalls
+        logging.info(f"粗排序的结果是： {querys}")
+        if querys:
+            rank_scores = self.rankONNX.predict(querys)
+            for j in range(len(esres)):
+                esres[j]["score"] = float(rank_scores[j]) * 0.3 + float(esres[j]["score"])
+            max_scores = max([j["score"] for j in esres])
+            recalls = [j for j in esres if j["score"] >= max_scores - 0.25]
+            recalls = [j for j in recalls if j["score"] >= 0.15]
+            logger.info(f"rank结果集: {recalls}")
+            # 这里要再排序一次
+            # if recalls:
+            #     recalls = sorted(recalls, key=lambda r: r["score"], reverse=True)
+            return recalls
+        else:
+            # 这里是没有匹配结果的情况
+            recalls = {
+                "score": 0,
+                "matches": 0,
+                "sim_question": "",
+                "answers": ["知识库没有查询到对应的数据"]
+            }
+            return recalls
 
 
 rank_instance = RankV1()

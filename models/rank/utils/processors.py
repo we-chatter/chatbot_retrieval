@@ -1,8 +1,16 @@
+# -*- coding: utf-8 -*-
+
 """
-@author: 吴欣辉
-@code: processors.py
-@date: 2020-11-11
-@desc: 预处理函数库
+@Author  :   Xu
+
+@Software:   PyCharm
+
+@File    :   LogUtils2.py
+
+@Time    :   2018-06-13 17:51
+
+@Desc    :
+
 """
 
 import os, sys

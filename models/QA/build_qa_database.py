@@ -28,7 +28,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
 
 class ProcessIntoES(object):
-    def __init__(self, ip="192.168.8.183"):
+    def __init__(self, ip="127.0.0.1"):
         self._index = "law_qa_test_1"  # 相当于创建的MySQL数据库名称
         # 无用户名密码状态
         self.es = Elasticsearch([ip], port=9200)
